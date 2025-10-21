@@ -26,7 +26,7 @@
     .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#e6eef8}
 
     .meme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-    .meme-grid img{width:100%;height:120px;object-fit:cover;border-radius:8px;cursor:pointer;display:block}
+    .meme-grid img{width:300px;height:300px;object-fit:cover;border-radius:8px;cursor:pointer;display:block}
 
     .side{position:sticky;top:18px}
     .timeline{max-height:420px;overflow:auto;padding-right:6px}
@@ -45,7 +45,7 @@
 
     /* Meme editor */
     .editor{display:grid;grid-template-columns:1fr 220px;gap:12px;margin-top:12px}
-    canvas{width:100%;border-radius:8px;background:#111}
+    canvas{width:300px !important;height:300px !important;max-width:100%;max-height:100%;border-radius:8px;background:#111;display:block;margin:0 auto}
     .confetti{position:fixed;left:0;right:0;bottom:0;pointer-events:none}
 
     footer{padding:18px;text-align:center;opacity:0.7}
@@ -83,19 +83,19 @@
           </div>
 
           <div class="meme-grid" id="memeGrid">
-            <img src="https://picsum.photos/seed/m1/400/240" alt="m1" data-caption="Когда стрим идёт идеально">
-            <img src="https://picsum.photos/seed/m2/400/240" alt="m2" data-caption="Невероятный момент">
-            <img src="https://picsum.photos/seed/m3/400/240" alt="m3" data-caption="Чат взрывается">
-            <img src="https://picsum.photos/seed/m4/400/240" alt="m4" data-caption="Классика мемов">
-            <img src="https://picsum.photos/seed/m5/400/240" alt="m5" data-caption="Только факты">
-            <img src="https://picsum.photos/seed/m6/400/240" alt="m6" data-caption="Подписка!">
+            <img src="https://github.com/zoroxcv/mell/blob/main/mem1.jpeg?raw=true" alt="m1" data-caption="ирокезззз">
+            <img src="https://github.com/zoroxcv/mell/blob/main/mem2.webp?raw=true" alt="m2" data-caption="пв54ив94к5и1в5">
+            <img src="https://github.com/zoroxcv/mell/blob/main/mem3.webp?raw=true" alt="m3" data-caption="слыышь">
+            <img src="https://github.com/zoroxcv/mell/blob/main/mem4.webp?raw=true" alt="m4" data-caption="боксер">
+            <img src="https://github.com/zoroxcv/mell/blob/main/mem5.jpg?raw=true" alt="m5" data-caption="при бабках">
+            <img src="https://github.com/zoroxcv/mell/blob/main/mem6.webp?raw=true" alt="m6" data-caption="костюмчик">
           </div>
+          <div id="gallery" class="meme-grid"></div>
           <div style="display:flex;gap:8px;margin:10px 0">
             <button class="btn ghost" id="shuffle">Перемешать</button>
             <input id="search" placeholder="Поиск по мемам" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit">
             <button class="btn ghost" id="darkToggle">Тема</button>
           </div>
-          <div id="gallery" class="meme-grid"></div>
           <div style="margin:10px 0">
             <input type="file" id="uploadMeme" accept="image/*" style="display:none">
             <button class="btn ghost" id="uploadBtn">Загрузить свой мем</button>
@@ -103,7 +103,7 @@
 
           <div class="card editor" style="margin-top:12px">
             <div>
-              <canvas id="memeCanvas" width="800" height="450"></canvas>
+              <canvas id="memeCanvas" width="300" height="300"></canvas>
               <div style="display:flex;gap:8px;margin-top:8px">
                 <input id="memeText" placeholder="Напиши забавный текст" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit">
                 <button class="btn" id="drawMeme">Наложить</button>
@@ -210,7 +210,7 @@
       let i=0;const n=6;const int=setInterval(()=>{
         document.querySelector('.subtitle').textContent = msgs[i%msgs.length];
         i++; if(i>n) clearInterval(int);
-      },240);
+      },300);
       document.querySelector('.subtitle').animate([{opacity:0.4},{opacity:1}],{duration:800,iterations:4});
     }
 
@@ -232,16 +232,26 @@
       const t=document.createElement('div');t.textContent=text;Object.assign(t.style,{position:'fixed',right:'18px',bottom:'18px',background:'var(--accent)',color:'#071022',padding:'10px 12px',borderRadius:'10px',fontWeight:700});document.body.appendChild(t);setTimeout(()=>t.animate([{opacity:1},{opacity:0}],{duration:800}),1500);setTimeout(()=>t.remove(),2600);
     }
 
-    // -- Meme grid click => load into canvas
-    const imgs = Array.from(document.querySelectorAll('#memeGrid img'));
     const gallery = document.getElementById('gallery');
+
+    // Функция для навешивания кликабельности на картинки memeGrid
+    function makeMemeGridClickable() {
+      document.querySelectorAll('#memeGrid img').forEach(img => {
+        img.onclick = () => loadImageToCanvas(img.src);
+      });
+    }
+    makeMemeGridClickable();
+
     function populateGallery(){
       gallery.innerHTML='';
-      imgs.concat().forEach(i=>{
+      // Берём актуальный список картинок из memeGrid
+      const imgs = Array.from(document.querySelectorAll('#memeGrid img'));
+      imgs.forEach(i=>{
         const el = document.createElement('img'); el.src = i.src; el.alt = i.alt; el.title = i.getAttribute('data-caption') || '';
         el.addEventListener('click',()=>{loadImageToCanvas(el.src)});
         gallery.appendChild(el);
       });
+      makeMemeGridClickable(); // чтобы новые картинки тоже были кликабельны
     }
     populateGallery();
 
@@ -257,6 +267,13 @@
       const dw=iw*r, dh=ih*r; const dx=(cw-dw)/2, dy=(ch-dh)/2;
       ctx.drawImage(currentImg, 0,0,iw,ih, dx, dy, dw, dh);
     }
+
+    // Инициализация canvas первой картинкой
+    (function(){
+      const imgs = Array.from(document.querySelectorAll('#memeGrid img'));
+      if(imgs[0]) loadImageToCanvas(imgs[0].src);
+    })();
+
     document.getElementById('drawMeme').addEventListener('click', ()=>{
       const text = document.getElementById('memeText').value || 'Когда стрим идёт';
       drawBase();
@@ -286,9 +303,6 @@
       const link = document.createElement('a'); link.download='meme.png'; link.href = canvas.toDataURL('image/png'); link.click();
     });
 
-    // Initialize canvas with first pic
-    loadImageToCanvas(imgs[0].src);
-
     // Quiz choices
     document.querySelectorAll('.choice').forEach(c=>c.addEventListener('click', ()=>{
       const role=c.getAttribute('data-role'); const out=document.getElementById('quizResult');
@@ -312,7 +326,10 @@
 
     // Shuffle gallery
     document.getElementById('shuffle').addEventListener('click', ()=>{
-      imgs.sort(()=>0.5-Math.random()); populateGallery(); showToast('Рандомизировано');
+      const imgs = Array.from(document.querySelectorAll('#memeGrid img'));
+      imgs.sort(()=>0.5-Math.random());
+      populateGallery();
+      showToast('Рандомизировано');
     });
 
     // Search
@@ -348,7 +365,8 @@
         img.alt = 'user-meme';
         img.title = 'Мой мем';
         img.onload = function(){
-          imgs.push(img);
+          const memeGrid = document.getElementById('memeGrid');
+          memeGrid.appendChild(img);
           populateGallery();
           showToast('Мем добавлен!');
         }
