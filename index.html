@@ -37,20 +37,20 @@
     .choices{display:flex;flex-direction:column;gap:8px;margin-top:8px}
     .choice{background:var(--glass);padding:8px;border-radius:8px;cursor:pointer}
 
-    /* Glitch */
+    
     .glitch{font-size:14px;font-weight:800;position:relative;display:inline-block}
     .glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0}
     .glitch::before{clip-path:inset(0 0 50% 0);transform:translate(2px,-2px);opacity:0.8}
     .glitch::after{clip-path:inset(50% 0 0 0);transform:translate(-2px,2px);opacity:0.8}
 
-    /* Meme editor */
+    
     .editor{display:grid;grid-template-columns:1fr 220px;gap:12px;margin-top:12px}
     canvas{width:300px !important;height:300px !important;max-width:100%;max-height:100%;border-radius:8px;background:#111;display:block;margin:0 auto}
     .confetti{position:fixed;left:0;right:0;bottom:0;pointer-events:none}
 
     footer{padding:18px;text-align:center;opacity:0.7}
 
-    /* Responsive */
+    
     @media(max-width:980px){main{grid-template-columns:1fr} .side{position:static}}
   </style>
 </head>
@@ -79,26 +79,16 @@
           <div class="controls">
             <button class="btn" id="startStream">Запустить стрим</button>
             <button class="btn" id="donate">Задонатить</button>
-            <button class="btn ghost" id="angerChat">Разозлить чат</button>
+            
           </div>
 
           <div class="meme-grid" id="memeGrid">
-            <img src="https://github.com/zoroxcv/mell/blob/main/mem1.jpeg?raw=true" alt="m1" data-caption="ирокезззз">
-            <img src="https://github.com/zoroxcv/mell/blob/main/mem2.webp?raw=true" alt="m2" data-caption="пв54ив94к5и1в5">
-            <img src="https://github.com/zoroxcv/mell/blob/main/mem3.webp?raw=true" alt="m3" data-caption="слыышь">
-            <img src="https://github.com/zoroxcv/mell/blob/main/mem4.webp?raw=true" alt="m4" data-caption="боксер">
-            <img src="https://github.com/zoroxcv/mell/blob/main/mem5.jpg?raw=true" alt="m5" data-caption="при бабках">
-            <img src="https://github.com/zoroxcv/mell/blob/main/mem6.webp?raw=true" alt="m6" data-caption="костюмчик">
+            
           </div>
           <div id="gallery" class="meme-grid"></div>
-          <div style="display:flex;gap:8px;margin:10px 0">
-            <button class="btn ghost" id="shuffle">Перемешать</button>
-            <input id="search" placeholder="Поиск по мемам" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit">
-            <button class="btn ghost" id="darkToggle">Тема</button>
-          </div>
           <div style="margin:10px 0">
             <input type="file" id="uploadMeme" accept="image/*" style="display:none">
-            <button class="btn ghost" id="uploadBtn">Загрузить свой мем</button>
+            <button class="btn" id="uploadBtn">Загрузить свой мем</button>
           </div>
 
           <div class="card editor" style="margin-top:12px">
@@ -112,7 +102,7 @@
             <div>
               <h4>Инструменты</h4>
               <p style="margin:6px 0;opacity:0.85">выбери мем сверху и напиши к нему текст</p>
-              <button class="btn ghost" id="downloadMeme">Скачать мем</button>
+              <button class="btn" id="downloadMeme">Скачать мем</button>
               <div style="height:8px"></div>
               <button class="btn ghost" id="shareLink">Копировать ссылку</button>
             </div>
@@ -177,11 +167,11 @@
   </main>
 
   <div class="confetti" id="confetti"></div>
-
+<button id="github" style="display:none"></button>
   <script>
-    // -- Utilities
+    
     function beep(){
-      // мелкий звук через WebAudio
+      
       try{
         const ctx = new (window.AudioContext||window.webkitAudioContext)();
         const o = ctx.createOscillator();
@@ -192,12 +182,12 @@
       }catch(e){console.log(e)}
     }
 
-    // -- Buttons
+    
     document.getElementById('startStream').addEventListener('click', ()=>{
       beep(); startStreamEffect();
     });
     document.getElementById('donate').addEventListener('click', ()=>{beep(); triggerConfetti(); showToast('Спасибо за донат!')});
-    document.getElementById('angerChat').addEventListener('click', ()=>{beep(); angerChat()});
+   
 
     function startStreamEffect(){
       const el = document.querySelector('.hero h1');
@@ -205,21 +195,12 @@
       el.animate([{transform:'scale(1)'},{transform:'scale(1.04)'},{transform:'scale(1)'}],{duration:900,iterations:1});
     }
 
-    function angerChat(){
-      const msgs = ['Чат: ЗАЧЕМ', 'Чат: ОФФ', 'Чат: НУ ТЫ...'];
-      let i=0;const n=6;const int=setInterval(()=>{
-        document.querySelector('.subtitle').textContent = msgs[i%msgs.length];
-        i++; if(i>n) clearInterval(int);
-      },300);
-      document.querySelector('.subtitle').animate([{opacity:0.4},{opacity:1}],{duration:800,iterations:4});
-    }
-
-    // -- Confetti
+    
     function triggerConfetti(){
       const c = document.getElementById('confetti');
       for(let i=0;i<30;i++){
         const el=document.createElement('div');
-        el.style.position='absolute';el.style.left=(Math.random()*100)+'%';el.style.bottom='0';el.style.width='8px';el.style.height='14px';el.style.background=['#ffb86b','#ff7a59','#ffd66b'][Math.floor(Math.random()*3)];el.style.opacity=0.95;el.style.borderRadius='2px';el.style.transform='translateY(0)';
+        el.style.position='absolute';el.style.left=(Math.random()*100)+'%';el.style.bottom='0';el.style.fontSize='32px';el.textContent='💸';el.style.opacity=0.95;
         c.appendChild(el);
         requestAnimationFrame(()=>{
           el.animate([{transform:'translateY(0)'},{transform:'translateY(-420px) rotate('+ (Math.random()*360)+'deg)'}],{duration:1500+Math.random()*800,iterations:1,easing:'cubic-bezier(.2,.6,.2,1)'});
@@ -233,58 +214,52 @@
     }
 
     const gallery = document.getElementById('gallery');
-
-    // Функция для навешивания кликабельности на картинки memeGrid
+    
+    function getMemeGridImgs() {
+      return Array.from(document.querySelectorAll('#memeGrid img'));
+    }
     function makeMemeGridClickable() {
-      document.querySelectorAll('#memeGrid img').forEach(img => {
+      getMemeGridImgs().forEach(img => {
         img.onclick = () => loadImageToCanvas(img.src);
       });
     }
     makeMemeGridClickable();
 
     function populateGallery(){
+     
       gallery.innerHTML='';
-      // Берём актуальный список картинок из memeGrid
-      const imgs = Array.from(document.querySelectorAll('#memeGrid img'));
-      imgs.forEach(i=>{
-        const el = document.createElement('img'); el.src = i.src; el.alt = i.alt; el.title = i.getAttribute('data-caption') || '';
-        el.addEventListener('click',()=>{loadImageToCanvas(el.src)});
-        gallery.appendChild(el);
-      });
-      makeMemeGridClickable(); // чтобы новые картинки тоже были кликабельны
+      
     }
-    populateGallery();
 
-    // Canvas editor
+    
     const canvas = document.getElementById('memeCanvas'); const ctx = canvas.getContext('2d');
     let currentImg = new Image(); currentImg.crossOrigin='anonymous';
-    function loadImageToCanvas(src){ currentImg = new Image(); currentImg.crossOrigin='anonymous'; currentImg.onload = ()=>{ drawBase(); }; currentImg.src = src; }
-    function drawBase(){ ctx.clearRect(0,0,canvas.width,canvas.height); // fill bg
-      // fit image to canvas preserving aspect
+    function loadImageToCanvas(src){
+      currentImg = new Image(); currentImg.crossOrigin='anonymous';
+      currentImg.onload = ()=>{
+        console.log('Картинка загружена:', src);
+        drawBase();
+      };
+      currentImg.onerror = ()=>{
+        console.error('Ошибка загрузки картинки:', src);
+      };
+      currentImg.src = src;
+    }
+    function drawBase(){ ctx.clearRect(0,0,canvas.width,canvas.height);
       const iw=currentImg.width, ih=currentImg.height; const cw=canvas.width, ch=canvas.height;
-      let sx=0, sy=0, sw=iw, sh=ih; // simple cover
       const r = Math.max(cw/iw, ch/ih);
       const dw=iw*r, dh=ih*r; const dx=(cw-dw)/2, dy=(ch-dh)/2;
       ctx.drawImage(currentImg, 0,0,iw,ih, dx, dy, dw, dh);
     }
-
-    // Инициализация canvas первой картинкой
-    (function(){
-      const imgs = Array.from(document.querySelectorAll('#memeGrid img'));
-      if(imgs[0]) loadImageToCanvas(imgs[0].src);
-    })();
-
     document.getElementById('drawMeme').addEventListener('click', ()=>{
       const text = document.getElementById('memeText').value || 'Когда стрим идёт';
       drawBase();
-      // text style
+      
       const size = Math.floor(canvas.height/10);
       ctx.font = `bold ${size}px Impact, Arial`;
       ctx.textAlign = 'center'; ctx.lineWidth = Math.max(6,Math.floor(size/12));
-      // stroke
       ctx.strokeStyle = 'black'; ctx.fillStyle = 'white';
       const x = canvas.width/2; const y = canvas.height - size;
-      // wrap long text
       wrapText(ctx,text,x,y,canvas.width-40,size+6);
     });
 
@@ -303,7 +278,13 @@
       const link = document.createElement('a'); link.download='meme.png'; link.href = canvas.toDataURL('image/png'); link.click();
     });
 
-    // Quiz choices
+    
+    (function(){
+      const imgs = getMemeGridImgs();
+      if(imgs[0]) loadImageToCanvas(imgs[0].src);
+    })();
+
+    
     document.querySelectorAll('.choice').forEach(c=>c.addEventListener('click', ()=>{
       const role=c.getAttribute('data-role'); const out=document.getElementById('quizResult');
       if(role==='mod') out.textContent='Вы — Модератор — админ чата';
@@ -311,47 +292,26 @@
       if(role==='warrior') out.textContent='Вы — агро-хейтер — агрессивный чувааак';
     }));
 
-    // Copy HTML (demo) - just copies page outerHTML
+    
     document.getElementById('copyHTML').addEventListener('click', ()=>{
       navigator.clipboard.writeText(document.documentElement.outerHTML).then(()=>showToast('HTML скопирован'));
     });
 
-    // Github button -> quick tutorial
+    
     document.getElementById('github').addEventListener('click', ()=>{
-      const txt = '1) Создай репозиторий на GitHub\n2) Залей этот файл в корень\n3) Включи GitHub Pages (main branch)\n4) Готово!';
+      const txt = '1) придумай и сделай прикольный видос\n2) в нем обязателньо должно присутсвовать "Mellstroy.game"\n3) выложи в тикток с хештегом #mellstroygame\n4) Готово!';
       alert(txt);
     });
 
     document.getElementById('openTutorial').addEventListener('click', ()=>document.getElementById('github').click());
 
-    // Shuffle gallery
-    document.getElementById('shuffle').addEventListener('click', ()=>{
-      const imgs = Array.from(document.querySelectorAll('#memeGrid img'));
-      imgs.sort(()=>0.5-Math.random());
-      populateGallery();
-      showToast('Рандомизировано');
-    });
-
-    // Search
-    document.getElementById('search').addEventListener('input', (e)=>{
-      const q = e.target.value.toLowerCase(); gallery.querySelectorAll('img').forEach(img=>{
-        const t = (img.title||'').toLowerCase(); img.style.display = t.includes(q) ? 'block' : 'none';
-      });
-    });
-
-    // Dark toggle: silly theme flip
-    document.getElementById('darkToggle').addEventListener('click', ()=>{
-      document.body.style.background = (document.body.style.background?'':'linear-gradient(180deg,#071024 0%, #0f1724 100%)');
-      showToast('Тема переключена');
-    });
-
-    // small easter egg: click logo to randomize title
+    
     document.querySelector('.logo svg').addEventListener('click', ()=>{
-      const phrases=['Мэллстрой рулит','Чат на стиле','Легенда в эфире','Подписка? Бери!'];
+      const phrases=['30 квартир? Я в деле!','Я УЖЕ КРАСНЫЙ, КУЛЬТУРНО НЕ ПОЛУЧИТСЯ','Легенда в эфире','Квартира? Бери!'];
       document.querySelector('.hero h1').textContent = phrases[Math.floor(Math.random()*phrases.length)];
     });
 
-    // Загрузка своего мема
+    
     document.getElementById('uploadBtn').addEventListener('click', ()=>{
       document.getElementById('uploadMeme').click();
     });
@@ -367,7 +327,7 @@
         img.onload = function(){
           const memeGrid = document.getElementById('memeGrid');
           memeGrid.appendChild(img);
-          populateGallery();
+          img.onclick = () => loadImageToCanvas(img.src); 
           showToast('Мем добавлен!');
         }
       };
